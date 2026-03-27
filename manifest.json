@@ -1,0 +1,22 @@
+{
+  "name": "Trading Bags Pro",
+  "short_name": "TradingBags",
+  "description": "Calculadora de rentabilidad para trading",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#0f0f1a",
+  "theme_color": "#0f0f1a",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "https://faz0u.github.io/Trading-Bags/StoreLogo.scale-400.png",
+      "sizes": "400x400",
+      "type": "image/png"
+    },
+    {
+      "src": "https://faz0u.github.io/Trading-Bags/launchericon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
