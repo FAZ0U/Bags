@@ -9,133 +9,996 @@
     <link rel="apple-touch-icon" href="https://faz0u.github.io/Trading-Bags/StoreLogo.scale-400.png">
     <title>Trading Bags Pro</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box;}
-        :root{--bg-primary:#0f0f1a;--bg-card:rgba(255,255,255,0.08);--bg-input:rgba(255,255,255,0.15);--text-primary:#eef;--text-secondary:#889;--text-accent:#ffd89b;--positive:#96c93d;--negative:#ff8a7a;}
-        body{font-family:sans-serif;background:var(--bg-primary);padding:16px;color:var(--text-primary);}
-        .container{max-width:800px;margin:0 auto;}
-        .header{text-align:center;margin-bottom:24px;position:relative;}
-        .header h1{font-size:1.8rem;background:linear-gradient(135deg,#ffd89b,#c7e9fb);-webkit-background-clip:text;background-clip:text;color:transparent;}
-        .theme-toggle{position:absolute;top:0;right:0;background:var(--bg-card);border:1px solid rgba(255,255,255,0.1);border-radius:40px;padding:8px 12px;cursor:pointer;}
-        .control-panel{background:var(--bg-card);border-radius:24px;padding:16px;margin-bottom:20px;}
-        .control-row{display:flex;gap:12px;flex-wrap:wrap;}
-        .control-item{flex:1;background:rgba(0,0,0,0.3);padding:10px;border-radius:16px;display:flex;justify-content:space-between;}
-        .control-item label{color:var(--text-accent);}
-        .control-item input{background:var(--bg-input);border:none;padding:8px;border-radius:12px;color:white;width:85px;text-align:center;}
-        .add-item-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px;}
-        .add-item-row input{flex:1;background:var(--bg-input);border:none;padding:10px;border-radius:14px;color:white;}
-        .btn-add{background:linear-gradient(135deg,#00b09b,#96c93d);border:none;padding:10px 20px;border-radius:14px;color:white;font-weight:bold;cursor:pointer;}
-        .btn-simulator{background:linear-gradient(135deg,#667eea,#764ba2);border:none;padding:12px;border-radius:14px;color:white;font-weight:bold;cursor:pointer;width:100%;margin-top:12px;}
-        .data-management{background:rgba(0,0,0,0.25);border-radius:20px;padding:12px;margin-top:12px;}
-        .data-buttons{display:flex;gap:10px;flex-wrap:wrap;}
-        .btn-data{flex:1;background:rgba(100,100,150,0.4);border:1px solid rgba(255,255,255,0.1);padding:10px;border-radius:14px;color:white;cursor:pointer;}
-        .stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:20px;}
-        .stat-card{background:var(--bg-card);border-radius:20px;padding:14px;text-align:center;}
-        .items-container{display:flex;flex-direction:column;gap:14px;}
-        .item-card{background:var(--bg-card);border-radius:20px;padding:14px;}
-        .item-header{display:flex;justify-content:space-between;margin-bottom:12px;}
-        .item-name{font-size:1.2rem;font-weight:bold;color:var(--text-accent);}
-        .item-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-        .field{background:rgba(0,0,0,0.2);padding:8px;border-radius:14px;}
-        .field input{background:transparent;border:none;color:white;font-size:1rem;width:100%;}
-        .item-results{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;background:rgba(0,0,0,0.2);padding:10px;border-radius:16px;}
-        .result{text-align:center;}
-        .positive{color:var(--positive);}
-        .negative{color:var(--negative);}
-        .delete-btn{background:rgba(255,80,80,0.3);border:none;padding:8px;border-radius:40px;color:white;cursor:pointer;}
-        .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:1000;padding:20px;}
-        .modal.active{display:flex;align-items:center;justify-content:center;}
-        .modal-content{background:#1a1a2e;border-radius:28px;max-width:700px;width:100%;max-height:90vh;overflow-y:auto;padding:20px;}
-        .modal-header{display:flex;justify-content:space-between;margin-bottom:20px;}
-        .close-modal{background:rgba(255,80,80,0.5);border:none;padding:8px 16px;border-radius:40px;color:white;cursor:pointer;}
-        .global-qty-section{background:rgba(102,126,234,0.2);border-radius:16px;padding:12px;margin-bottom:20px;display:flex;justify-content:space-between;flex-wrap:wrap;}
-        .sim-item{background:var(--bg-card);border-radius:16px;padding:12px;margin-bottom:12px;}
-        .sim-item-header{display:flex;justify-content:space-between;margin-bottom:10px;flex-wrap:wrap;}
-        .sim-item-control{display:flex;gap:8px;}
-        .sim-item-control input{background:var(--bg-input);border:none;padding:8px;border-radius:12px;color:white;width:70px;text-align:center;}
-        .sim-item-control button{background:rgba(100,100,200,0.3);border:none;padding:6px 14px;border-radius:12px;color:white;cursor:pointer;}
-        .sim-total{margin-top:20px;padding:16px;background:rgba(0,176,155,0.2);border-radius:20px;text-align:center;}
-        .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#96c93d;color:white;padding:10px 20px;border-radius:40px;animation:fadeOut 2s forwards;}
-        @keyframes fadeOut{0%{opacity:1}100%{opacity:0;visibility:hidden}}
-        footer{text-align:center;margin-top:20px;color:#668;font-size:0.7rem;}
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.2s, border-color 0.2s;
+        }
+
+        /* Modo oscuro (por defecto) */
+        :root {
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: rgba(255, 255, 255, 0.08);
+            --bg-input: rgba(255, 255, 255, 0.15);
+            --text-primary: #eef;
+            --text-secondary: #889;
+            --text-accent: #ffd89b;
+            --border: rgba(255, 255, 255, 0.1);
+            --positive: #96c93d;
+            --negative: #ff8a7a;
+            --btn-gradient: linear-gradient(135deg, #00b09b, #96c93d);
+        }
+
+        /* Modo claro */
+        body.light {
+            --bg-primary: #f5f5f7;
+            --bg-secondary: #ffffff;
+            --bg-card: rgba(0, 0, 0, 0.05);
+            --bg-input: rgba(0, 0, 0, 0.08);
+            --text-primary: #1a1a2e;
+            --text-secondary: #666;
+            --text-accent: #c97e00;
+            --border: rgba(0, 0, 0, 0.1);
+            --positive: #2e7d32;
+            --negative: #c62828;
+            --btn-gradient: linear-gradient(135deg, #00b09b, #96c93d);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            min-height: 100vh;
+            padding: 16px;
+            color: var(--text-primary);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(135deg, #ffd89b, #c7e9fb);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 6px;
+        }
+
+        .header p {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 40px;
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .control-panel {
+            background: var(--bg-card);
+            backdrop-filter: blur(12px);
+            border-radius: 24px;
+            padding: 16px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .control-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: space-between;
+        }
+
+        .control-item {
+            flex: 1;
+            min-width: 130px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 14px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .control-item label {
+            font-weight: 600;
+            color: var(--text-accent);
+            font-size: 0.85rem;
+        }
+
+        .control-item input {
+            background: var(--bg-input);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            width: 85px;
+            text-align: center;
+        }
+
+        .add-item-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 12px;
+            border-radius: 20px;
+            margin-top: 8px;
+        }
+
+        .add-item-row input {
+            flex: 1;
+            min-width: 90px;
+            background: var(--bg-input);
+            border: none;
+            padding: 10px 12px;
+            border-radius: 14px;
+            color: var(--text-primary);
+        }
+
+        .btn-add {
+            background: var(--btn-gradient);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 14px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-simulator {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 14px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .data-management {
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 20px;
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .data-title {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .data-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .btn-data {
+            flex: 1;
+            min-width: 90px;
+            background: rgba(100, 100, 150, 0.4);
+            border: 1px solid var(--border);
+            padding: 10px 12px;
+            border-radius: 14px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .btn-data.reset {
+            background: rgba(255, 100, 100, 0.3);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 14px;
+            text-align: center;
+            border: 1px solid var(--border);
+        }
+
+        .stat-card h4 {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .stat-card .value {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--text-accent);
+        }
+
+        .items-container {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .item-card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 14px;
+            border: 1px solid var(--border);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+        }
+
+        .item-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--text-accent);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .badge {
+            font-size: 0.8rem;
+            padding: 2px 8px;
+            border-radius: 20px;
+        }
+
+        .badge-1 { background: linear-gradient(135deg, #f5af19, #f12711); }
+        .badge-2 { background: linear-gradient(135deg, #a8c0ff, #3f2b96); }
+        .badge-3 { background: linear-gradient(135deg, #43e97b, #38f9d7); }
+
+        .item-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .field {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 8px 10px;
+            border-radius: 14px;
+        }
+
+        .field label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            display: block;
+        }
+
+        .field input {
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1rem;
+            font-weight: 600;
+            width: 100%;
+            padding: 4px 0;
+        }
+
+        .item-results {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 16px;
+            margin: 10px 0;
+        }
+
+        .result {
+            text-align: center;
+        }
+
+        .result .label {
+            font-size: 0.65rem;
+            color: var(--text-secondary);
+        }
+
+        .result .number {
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .positive { color: var(--positive); }
+        .negative { color: var(--negative); }
+
+        .delete-btn {
+            background: rgba(255, 80, 80, 0.3);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 28px;
+            max-width: 700px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .modal-header h2 {
+            color: var(--text-accent);
+        }
+
+        .close-modal {
+            background: rgba(255, 80, 80, 0.5);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 40px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .global-qty-section {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .global-qty-section label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .global-qty-section input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .global-qty-section input[type="number"] {
+            background: var(--bg-input);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            width: 100px;
+            text-align: center;
+        }
+
+        .global-qty-section button {
+            background: var(--btn-gradient);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+        }
+
+        .sim-item {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .sim-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sim-item-name {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .sim-item-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sim-item-control input {
+            background: var(--bg-input);
+            border: none;
+            padding: 8px 10px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            width: 70px;
+            text-align: center;
+            font-size: 1rem;
+        }
+
+        .sim-item-control button {
+            background: rgba(100, 100, 200, 0.3);
+            border: none;
+            padding: 6px 14px;
+            border-radius: 12px;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .sim-item-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+        }
+
+        .sim-total {
+            margin-top: 20px;
+            padding: 16px;
+            background: linear-gradient(135deg, rgba(0,176,155,0.2), rgba(150,201,61,0.2));
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .sim-total h3 {
+            font-size: 1.5rem;
+            color: var(--text-accent);
+        }
+
+        .btn-reset {
+            background: rgba(100, 100, 100, 0.5);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 14px;
+            color: white;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--text-secondary);
+            font-size: 0.7rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--positive);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            z-index: 2000;
+            animation: fadeOut 2s ease-in-out forwards;
+        }
+
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            70% { opacity: 1; }
+            100% { opacity: 0; visibility: hidden; }
+        }
+
+        .verification-note {
+            background: rgba(150, 201, 61, 0.15);
+            border-left: 3px solid var(--positive);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.7rem;
+            margin-top: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
             <h1>🎒 Trading Bags Pro</h1>
-            <p>Instala como app | Guardado automático</p>
+            <p>Con guardado automático | Instala como app</p>
             <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
         </div>
+
         <div class="control-panel">
-            <div class="control-row">
-                <div class="control-item"><label>💰 Impuesto</label><input type="number" id="taxRate" step="0.1" value="10.5">%</div>
-                <div class="control-item"><label>⚠️ Pérdidas</label><input type="number" id="lossRate" step="0.1" value="7.5">%</div>
-            </div>
-            <div class="add-item-row">
-                <input type="text" id="newName" placeholder="Nombre">
-                <input type="number" id="newBuy" placeholder="Compra">
-                <input type="number" id="newSell" placeholder="Venta">
-                <button class="btn-add" onclick="addItem()">+ Agregar</button>
-            </div>
-            <div class="data-management">
-                <div class="data-buttons">
-                    <button class="btn-data" onclick="saveToLocal()">💾 Guardar</button>
-                    <button class="btn-data" onclick="exportData()">📤 Exportar</button>
-                    <button class="btn-data" onclick="document.getElementById('importFile').click()">📥 Importar</button>
-                    <button class="btn-data" onclick="resetToDefault()">🔄 Restaurar</button>
+            <div class="control-group">
+                <div class="control-row">
+                    <div class="control-item">
+                        <label>💰 Impuesto</label>
+                        <input type="number" id="taxRate" step="0.1" value="10.5">%
+                    </div>
+                    <div class="control-item">
+                        <label>⚠️ Pérdidas Varias</label>
+                        <input type="number" id="lossRate" step="0.1" value="7.5">%
+                    </div>
                 </div>
-                <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(this)">
+                
+                <div class="add-item-row">
+                    <input type="text" id="newName" placeholder="Nombre del objeto">
+                    <input type="number" id="newBuy" placeholder="Precio compra">
+                    <input type="number" id="newSell" placeholder="Precio venta">
+                    <button class="btn-add" onclick="addItem()">+ Agregar</button>
+                </div>
+
+                <div class="data-management">
+                    <div class="data-title">💾 Gestión de datos</div>
+                    <div class="data-buttons">
+                        <button class="btn-data" onclick="saveToLocal()">💾 Guardar</button>
+                        <button class="btn-data" onclick="exportData()">📤 Exportar</button>
+                        <button class="btn-data" onclick="document.getElementById('importFile').click()">📥 Importar</button>
+                        <button class="btn-data reset" onclick="resetToDefault()">🔄 Restaurar</button>
+                    </div>
+                    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(this)">
+                </div>
+
+                <button class="btn-simulator" onclick="openSimulator()">📊 SIMULADOR AVANZADO</button>
             </div>
-            <button class="btn-simulator" onclick="openSimulator()">📊 SIMULADOR AVANZADO</button>
+            <div class="verification-note">
+                ✅ Datos guardados automáticamente | Impuesto sobre precio venta | Pérdidas varias sobre utilidad bruta
+            </div>
         </div>
+
         <div class="stats-grid" id="statsGrid"></div>
         <div class="items-container" id="itemsContainer"></div>
-        <footer>Para instalar: menú Chrome → "Agregar a pantalla de inicio"</footer>
+        <footer>* Los datos se guardan automáticamente | Para instalar: menú Chrome → "Agregar a pantalla de inicio"</footer>
     </div>
+
     <div id="simulatorModal" class="modal">
         <div class="modal-content">
-            <div class="modal-header"><h2>📊 Simulador</h2><button class="close-modal" onclick="closeSimulator()">✖ Cerrar</button></div>
+            <div class="modal-header">
+                <h2>📊 Simulador de Volumen Diario</h2>
+                <button class="close-modal" onclick="closeSimulator()">✖ Cerrar</button>
+            </div>
             <div class="global-qty-section">
-                <label><input type="checkbox" id="globalQtyToggle"> 🔗 Aplicar a todos</label>
-                <div><input type="number" id="globalQtyValue" value="50" disabled><button id="applyGlobalQty" onclick="applyGlobalQuantity()" disabled>Aplicar</button></div>
+                <label>
+                    <input type="checkbox" id="globalQtyToggle"> 🔗 Aplicar misma cantidad a todos
+                </label>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="number" id="globalQtyValue" placeholder="Cantidad" value="50" min="0" step="1" disabled>
+                    <button id="applyGlobalQty" onclick="applyGlobalQuantity()" disabled>Aplicar</button>
+                </div>
             </div>
             <div id="simulatorItems"></div>
-            <div class="sim-total"><h3 id="totalGanancia">0 silver</h3><p id="totalInversion"></p><button class="btn-reset" onclick="resetQuantities()">🔄 Resetear</button></div>
+            <div class="sim-total" id="simTotal">
+                <h3 id="totalGanancia">0 silver</h3>
+                <p id="totalInversion">Inversión total: 0 silver</p>
+                <button class="btn-reset" onclick="resetQuantities()">🔄 Resetear Cantidades</button>
+            </div>
         </div>
     </div>
+
     <script>
-        const defaultItems=[{name:"Bolsa T5",buy:10148,sell:17726},{name:"Bolsa T5.1",buy:21076,sell:28941},{name:"Visión T6.1",buy:78588,sell:104829},{name:"Visión T5.0",buy:37119,sell:48730},{name:"Bolsa T6.1",buy:75780,sell:98981},{name:"Visión T4.0",buy:28014,sell:36507}];
-        let items=[],simulatorQuantities={};
-        function saveToLocal(){localStorage.setItem('tradingBagsData',JSON.stringify({items,taxRate:getTaxRate()*100,lossRate:getLossRate()*100}));showToast('✅ Guardado');}
-        function loadFromLocal(){const s=localStorage.getItem('tradingBagsData');if(s){const d=JSON.parse(s);items=d.items;document.getElementById('taxRate').value=d.taxRate;document.getElementById('lossRate').value=d.lossRate;}else items=JSON.parse(JSON.stringify(defaultItems));initQuantities();renderItems();}
-        function resetToDefault(){if(confirm('¿Restaurar datos originales?')){items=JSON.parse(JSON.stringify(defaultItems));document.getElementById('taxRate').value=10.5;document.getElementById('lossRate').value=7.5;initQuantities();renderItems();saveToLocal();showToast('🔄 Restaurado');}}
-        function exportData(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({items,taxRate:getTaxRate()*100,lossRate:getLossRate()*100})],{type:'application/json'}));a.download=`trading_bags_${Date.now()}.json`;a.click();showToast('💾 Exportado');}
-        function importData(input){const f=input.files[0];if(!f)return;const r=new FileReader();r.onload=e=>{const d=JSON.parse(e.target.result);if(d.items){items=d.items;if(d.taxRate)document.getElementById('taxRate').value=d.taxRate;if(d.lossRate)document.getElementById('lossRate').value=d.lossRate;initQuantities();renderItems();saveToLocal();showToast('📂 Importado');}};r.readAsText(f);input.value='';}
-        function showToast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000);}
-        function initQuantities(){items.forEach(i=>{if(simulatorQuantities[i.name]===undefined)simulatorQuantities[i.name]=0;});}
-        function getTaxRate(){return parseFloat(document.getElementById('taxRate').value)/100;}
-        function getLossRate(){return parseFloat(document.getElementById('lossRate').value)/100;}
-        function calculateItem(i){const tax=getTaxRate(),loss=getLossRate(),f=1-tax,ingreso=i.sell*f,imp=i.sell*tax,utilBruta=ingreso-i.buy,perdida=utilBruta*loss,utilNeta=utilBruta-perdida,rent=(utilNeta/i.buy)*100,precioMin=i.buy/f;return{ingresoNeto:ingreso,impuesto:imp,utilidadBruta:utilBruta,perdidaVarias:perdida,utilidadNeta:utilNeta,rentabilidad:rent,precioMinimo:precioMin};}
-        function calculateAll(){return items.map(i=>({...i,...calculateItem(i)}));}
-        function renderStats(d){if(!d.length){document.getElementById('statsGrid').innerHTML='<div class="stat-card"><h4>Sin datos</h4></div>';return;}const bestRent=[...d].sort((a,b)=>b.rentabilidad-a.rentabilidad)[0],bestUtil=[...d].sort((a,b)=>b.utilidadNeta-a.utilidadNeta)[0],bestEfi=[...d].sort((a,b)=>b.eficiencia-b.eficiencia)[0],total=d.reduce((s,i)=>s+i.utilidadNeta,0);document.getElementById('statsGrid').innerHTML=`<div class="stat-card"><h4>🏆 Mejor Rentabilidad</h4><div class="value">${bestRent.name}</div><div>${bestRent.rentabilidad.toFixed(2)}%</div></div><div class="stat-card"><h4>💰 Mayor Utilidad</h4><div class="value">${bestUtil.name}</div><div>${Math.round(bestUtil.utilidadNeta).toLocaleString()}</div></div><div class="stat-card"><h4>⚡ Eficiencia</h4><div class="value">${bestEfi.name}</div><div>${bestEfi.eficiencia.toFixed(0)}</div></div><div class="stat-card"><h4>📊 Ganancia Total</h4><div class="value">${Math.round(total).toLocaleString()}</div><div>silver/unidad</div></div>`;}
-        function renderItems(){const data=calculateAll(),sorted=[...data].sort((a,b)=>b.rentabilidad-a.rentabilidad),container=document.getElementById('itemsContainer');if(!sorted.length){container.innerHTML='<div class="item-card" style="text-align:center">✨ Agrega objetos</div>';return;}container.innerHTML=sorted.map((item,idx)=>{let badge=idx===0?'🥇':idx===1?'🥈':idx===2?'🥉':'';return`<div class="item-card"><div class="item-header"><div class="item-name">${badge} ${item.name}</div><button class="delete-btn" onclick="deleteItem('${item.name}')">🗑️</button></div><div class="item-fields"><div class="field"><label>💰 Compra</label><input type="number" value="${item.buy}" onchange="updateItem('${item.name}','buy',this.value)"></div><div class="field"><label>💵 Venta</label><input type="number" value="${item.sell}" onchange="updateItem('${item.name}','sell',this.value)"></div></div><div class="item-results"><div class="result"><div class="label">📥 Ingreso Neto</div><div class="number">${Math.round(item.ingresoNeto).toLocaleString()}</div></div><div class="result"><div class="label">📊 Utilidad Neta</div><div class="number positive">${Math.round(item.utilidadNeta).toLocaleString()}</div></div><div class="result"><div class="label">📈 Rentabilidad</div><div class="number positive">${item.rentabilidad.toFixed(2)}%</div></div><div class="result"><div class="label">🎯 Precio Mínimo</div><div class="number">${Math.round(item.precioMinimo).toLocaleString()}</div></div></div></div>`;}).join('');renderStats(data);saveToLocal();}
-        function updateItem(name,field,val){const i=items.find(x=>x.name===name);if(i){const n=parseFloat(val);if(!isNaN(n)&&n>=0){i[field]=n;renderItems();if(document.getElementById('simulatorModal').classList.contains('active'))renderSimulator();}}}
-        function deleteItem(name){items=items.filter(i=>i.name!==name);delete simulatorQuantities[name];renderItems();if(document.getElementById('simulatorModal').classList.contains('active'))renderSimulator();}
-        function addItem(){const n=document.getElementById('newName').value.trim(),b=parseFloat(document.getElementById('newBuy').value),s=parseFloat(document.getElementById('newSell').value);if(!n){alert('Nombre requerido');return;}if(isNaN(b)||b<=0){alert('Compra válida');return;}if(isNaN(s)||s<=0){alert('Venta válida');return;}items.push({name:n,buy:b,sell:s});simulatorQuantities[n]=0;document.getElementById('newName').value='';document.getElementById('newBuy').value='';document.getElementById('newSell').value='';renderItems();showToast(`✅ ${n} agregado`);}
-        function renderSimulator(){const data=calculateAll(),container=document.getElementById('simulatorItems');if(!data.length){container.innerHTML='<div style="text-align:center">No hay objetos</div>';return;}data.forEach(i=>{if(simulatorQuantities[i.name]===undefined)simulatorQuantities[i.name]=0;});container.innerHTML=data.map(i=>{const q=simulatorQuantities[i.name]||0;return`<div class="sim-item"><div class="sim-item-header"><span>${i.name}</span><div class="sim-item-control"><button onclick="changeQuantity('${i.name}',-1)">-</button><input type="number" value="${q}" onchange="setQuantity('${i.name}',this.value)" min="0"><button onclick="changeQuantity('${i.name}',1)">+</button></div></div><div class="sim-item-stats"><div>💰 Utilidad/unidad: ${Math.round(i.utilidadNeta).toLocaleString()}</div><div>📊 Ganancia: ${Math.round(i.utilidadNeta*q).toLocaleString()}</div><div>💵 Inversión: ${Math.round(i.buy*q).toLocaleString()}</div></div></div>`;}).join('');updateSimTotal(data);}
-        function updateSimTotal(data){let g=0,inv=0;data.forEach(i=>{const q=simulatorQuantities[i.name]||0;g+=i.utilidadNeta*q;inv+=i.buy*q;});document.getElementById('totalGanancia').innerHTML=`${Math.round(g).toLocaleString()} silver`;document.getElementById('totalInversion').innerHTML=`Inversión: ${Math.round(inv).toLocaleString()} silver | Rentabilidad: ${inv>0?((g/inv)*100).toFixed(2):0}%`;}
-        function changeQuantity(n,d){simulatorQuantities[n]=Math.max(0,(simulatorQuantities[n]||0)+d);renderSimulator();}
-        function setQuantity(n,v){let q=parseInt(v);if(isNaN(q)||q<0)q=0;simulatorQuantities[n]=q;renderSimulator();}
-        function resetQuantities(){Object.keys(simulatorQuantities).forEach(k=>simulatorQuantities[k]=0);renderSimulator();showToast('🔄 Cantidades reiniciadas');}
-        function applyGlobalQuantity(){const toggle=document.getElementById('globalQtyToggle');if(!toggle.checked)return;const qty=parseInt(document.getElementById('globalQtyValue').value);if(isNaN(qty)||qty<0){alert('Cantidad válida');return;}Object.keys(simulatorQuantities).forEach(k=>simulatorQuantities[k]=qty);renderSimulator();showToast(`🔗 ${qty} aplicado a todos`);}
-        function openSimulator(){initQuantities();renderSimulator();document.getElementById('simulatorModal').classList.add('active');}
-        function closeSimulator(){document.getElementById('simulatorModal').classList.remove('active');}
-        function toggleTheme(){document.body.classList.toggle('light');saveToLocal();}
-        document.getElementById('taxRate').oninput=()=>{renderItems();if(document.getElementById('simulatorModal').classList.contains('active'))renderSimulator();};
-        document.getElementById('lossRate').oninput=()=>{renderItems();if(document.getElementById('simulatorModal').classList.contains('active'))renderSimulator();};
-        const toggle=document.getElementById('globalQtyToggle'),input=document.getElementById('globalQtyValue'),btn=document.getElementById('applyGlobalQty');
-        toggle.onchange=()=>{input.disabled=!toggle.checked;btn.disabled=!toggle.checked;};
+        const defaultItems = [
+            { name: "Bolsa T5", buy: 10148, sell: 17726 },
+            { name: "Bolsa T5.1", buy: 21076, sell: 28941 },
+            { name: "Visión T6.1", buy: 78588, sell: 104829 },
+            { name: "Visión T5.0", buy: 37119, sell: 48730 },
+            { name: "Bolsa T6.1", buy: 75780, sell: 98981 },
+            { name: "Visión T4.0", buy: 28014, sell: 36507 }
+        ];
+
+        let items = [];
+        let simulatorQuantities = {};
+
+        // Guardar en localStorage
+        function saveToLocal() {
+            const dataToSave = {
+                items: items,
+                taxRate: parseFloat(document.getElementById('taxRate').value),
+                lossRate: parseFloat(document.getElementById('lossRate').value),
+                theme: document.body.classList.contains('light') ? 'light' : 'dark'
+            };
+            localStorage.setItem('tradingBagsData', JSON.stringify(dataToSave));
+            showToast('✅ Datos guardados');
+        }
+
+        // Cargar desde localStorage
+        function loadFromLocal() {
+            const saved = localStorage.getItem('tradingBagsData');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    items = data.items;
+                    document.getElementById('taxRate').value = data.taxRate;
+                    document.getElementById('lossRate').value = data.lossRate;
+                    if (data.theme === 'light') {
+                        document.body.classList.add('light');
+                    }
+                } catch(e) { 
+                    items = JSON.parse(JSON.stringify(defaultItems));
+                }
+            } else {
+                items = JSON.parse(JSON.stringify(defaultItems));
+            }
+            initQuantities();
+            renderItems();
+        }
+
+        // Restaurar valores por defecto
+        function resetToDefault() {
+            if (confirm('¿Restaurar datos originales? Se perderán los cambios.')) {
+                items = JSON.parse(JSON.stringify(defaultItems));
+                document.getElementById('taxRate').value = 10.5;
+                document.getElementById('lossRate').value = 7.5;
+                initQuantities();
+                renderItems();
+                saveToLocal();
+                showToast('🔄 Datos restaurados');
+            }
+        }
+
+        // Exportar datos a archivo
+        function exportData() {
+            const dataToExport = {
+                items: items,
+                taxRate: parseFloat(document.getElementById('taxRate').value),
+                lossRate: parseFloat(document.getElementById('lossRate').value),
+                exportDate: new Date().toISOString()
+            };
+            const dataStr = JSON.stringify(dataToExport, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `trading_bags_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('💾 Datos exportados');
+        }
+
+        // Importar datos desde archivo
+        function importData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = JSON.parse(e.target.result);
+                    if (data.items && Array.isArray(data.items)) {
+                        items = data.items;
+                        if (data.taxRate) document.getElementById('taxRate').value = data.taxRate;
+                        if (data.lossRate) document.getElementById('lossRate').value = data.lossRate;
+                        initQuantities();
+                        renderItems();
+                        saveToLocal();
+                        showToast('📂 Datos importados');
+                    } else {
+                        alert('Archivo inválido: no contiene datos de items');
+                    }
+                } catch(err) {
+                    alert('Error al leer el archivo: ' + err.message);
+                }
+            };
+            reader.readAsText(file);
+            input.value = '';
+        }
+
+        function showToast(message) {
+            const existing = document.querySelector('.toast');
+            if (existing) existing.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 2000);
+        }
+
+        function initQuantities() {
+            items.forEach(item => {
+                if (simulatorQuantities[item.name] === undefined) {
+                    simulatorQuantities[item.name] = 0;
+                }
+            });
+        }
+
+        function getTaxRate() { return parseFloat(document.getElementById('taxRate').value) / 100; }
+        function getLossRate() { return parseFloat(document.getElementById('lossRate').value) / 100; }
+
+        function calculateItem(item) {
+            const tax = getTaxRate();
+            const loss = getLossRate();
+            const factor = 1 - tax;
+            const ingresoNeto = item.sell * factor;
+            const impuesto = item.sell * tax;
+            const utilidadBruta = ingresoNeto - item.buy;
+            const perdidaVarias = utilidadBruta * loss;
+            const utilidadNeta = utilidadBruta - perdidaVarias;
+            const rentabilidad = (utilidadNeta / item.buy) * 100;
+            const precioMinimo = item.buy / factor;
+            const eficiencia = (utilidadNeta / item.buy) * 1000;
+            return { ingresoNeto, impuesto, utilidadBruta, perdidaVarias, utilidadNeta, rentabilidad, precioMinimo, eficiencia };
+        }
+
+        function calculateAll() { return items.map(item => ({ ...item, ...calculateItem(item) })); }
+
+        function renderStats(data) {
+            if (data.length === 0) {
+                document.getElementById('statsGrid').innerHTML = '<div class="stat-card"><h4>📊 Sin datos</h4><div class="value">Agrega objetos</div></div>';
+                return;
+            }
+            const bestRent = [...data].sort((a,b) => b.rentabilidad - a.rentabilidad)[0];
+            const bestUtil = [...data].sort((a,b) => b.utilidadNeta - a.utilidadNeta)[0];
+            const bestEfi = [...data].sort((a,b) => b.eficiencia - a.eficiencia)[0];
+            const totalGanancia = data.reduce((sum, item) => sum + item.utilidadNeta, 0);
+            document.getElementById('statsGrid').innerHTML = `
+                <div class="stat-card"><h4>🏆 Mejor Rentabilidad</h4><div class="value">${bestRent.name}</div><div class="small">${bestRent.rentabilidad.toFixed(2)}%</div></div>
+                <div class="stat-card"><h4>💰 Mayor Utilidad</h4><div class="value">${bestUtil.name}</div><div class="small">${Math.round(bestUtil.utilidadNeta).toLocaleString()}</div></div>
+                <div class="stat-card"><h4>⚡ Eficiencia (1k)</h4><div class="value">${bestEfi.name}</div><div class="small">${bestEfi.eficiencia.toFixed(0)} silver</div></div>
+                <div class="stat-card"><h4>📊 Ganancia Total</h4><div class="value">${Math.round(totalGanancia).toLocaleString()}</div><div class="small">silver/unidad</div></div>
+            `;
+        }
+
+        function renderItems() {
+            const data = calculateAll();
+            const sorted = [...data].sort((a,b) => b.rentabilidad - a.rentabilidad);
+            const container = document.getElementById('itemsContainer');
+            if (sorted.length === 0) {
+                container.innerHTML = '<div class="item-card" style="text-align:center; padding:30px;">✨ Agrega objetos con el formulario</div>';
+                renderStats([]);
+                return;
+            }
+            container.innerHTML = sorted.map((item, idx) => {
+                let badge = '';
+                if (idx === 0) badge = '<span class="badge badge-1">🥇</span>';
+                else if (idx === 1) badge = '<span class="badge badge-2">🥈</span>';
+                else if (idx === 2) badge = '<span class="badge badge-3">🥉</span>';
+                const rentClass = item.rentabilidad >= 0 ? 'positive' : 'negative';
+                return `
+                    <div class="item-card">
+                        <div class="item-header">
+                            <div class="item-name">${badge} ${item.name}</div>
+                            <button class="delete-btn" onclick="deleteItem('${item.name.replace(/'/g, "\\'")}')">🗑️</button>
+                        </div>
+                        <div class="item-fields">
+                            <div class="field"><label>💰 Compra</label><input type="number" value="${item.buy}" onchange="updateItem('${item.name.replace(/'/g, "\\'")}', 'buy', this.value)"></div>
+                            <div class="field"><label>💵 Venta</label><input type="number" value="${item.sell}" onchange="updateItem('${item.name.replace(/'/g, "\\'")}', 'sell', this.value)"></div>
+                        </div>
+                        <div class="item-results">
+                            <div class="result"><div class="label">📥 Ingreso Neto</div><div class="number">${Math.round(item.ingresoNeto).toLocaleString()}</div></div>
+                            <div class="result"><div class="label">📊 Utilidad Bruta</div><div class="number ${rentClass}">${Math.round(item.utilidadBruta).toLocaleString()}</div></div>
+                            <div class="result"><div class="label">⚠️ Pérdidas (${(getLossRate()*100).toFixed(1)}%)</div><div class="number negative">-${Math.round(item.perdidaVarias).toLocaleString()}</div></div>
+                            <div class="result"><div class="label">✨ Utilidad Neta</div><div class="number ${rentClass}">${Math.round(item.utilidadNeta).toLocaleString()}</div></div>
+                            <div class="result"><div class="label">📈 Rentabilidad</div><div class="number ${rentClass}">${item.rentabilidad.toFixed(2)}%</div></div>
+                            <div class="result"><div class="label">🎯 Precio Mínimo</div><div class="number">${Math.round(item.precioMinimo).toLocaleString()}</div></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            renderStats(data);
+            saveToLocal();
+        }
+
+        function updateItem(name, field, value) {
+            const item = items.find(i => i.name === name);
+            if (item) {
+                const num = parseFloat(value);
+                if (!isNaN(num) && num >= 0) {
+                    item[field] = num;
+                    renderItems();
+                    if (document.getElementById('simulatorModal').classList.contains('active')) renderSimulator();
+                }
+            }
+        }
+
+        function deleteItem(name) {
+            items = items.filter(i => i.name !== name);
+            delete simulatorQuantities[name];
+            renderItems();
+            if (document.getElementById('simulatorModal').classList.contains('active')) renderSimulator();
+        }
+
+        function addItem() {
+            const name = document.getElementById('newName').value.trim();
+            const buy = parseFloat(document.getElementById('newBuy').value);
+            const sell = parseFloat(document.getElementById('newSell').value);
+            if (!name) { alert('Ingresa un nombre'); return; }
+            if (isNaN(buy) || buy <= 0) { alert('Compra válida'); return; }
+            if (isNaN(sell) || sell <= 0) { alert('Venta válida'); return; }
+            if (items.some(i => i.name === name)) { alert('Ya existe'); return; }
+            items.push({ name, buy, sell });
+            simulatorQuantities[name] = 0;
+            document.getElementById('newName').value = '';
+            document.getElementById('newBuy').value = '';
+            document.getElementById('newSell').value = '';
+            renderItems();
+            showToast(`✅ "${name}" agregado`);
+        }
+
+        // Simulador
+        function renderSimulator() {
+            const data = calculateAll();
+            const container = document.getElementById('simulatorItems');
+            if (data.length === 0) {
+                container.innerHTML = '<div style="text-align:center; padding:30px;">✨ No hay objetos para simular</div>';
+                return;
+            }
+            data.forEach(item => {
+                if (simulatorQuantities[item.name] === undefined) simulatorQuantities[item.name] = 0;
+            });
+            container.innerHTML = data.map(item => {
+                const qty = simulatorQuantities[item.name] || 0;
+                return `
+                    <div class="sim-item">
+                        <div class="sim-item-header">
+                            <span class="sim-item-name">${item.name}</span>
+                            <div class="sim-item-control">
+                                <button onclick="changeQuantity('${item.name.replace(/'/g, "\\'")}', -1)">-</button>
+                                <input type="number" value="${qty}" onchange="setQuantity('${item.name.replace(/'/g, "\\'")}', this.value)" min="0">
+                                <button onclick="changeQuantity('${item.name.replace(/'/g, "\\'")}', 1)">+</button>
+                            </div>
+                        </div>
+                        <div class="sim-item-stats">
+                            <div>💰 Utilidad/unidad: ${Math.round(item.utilidadNeta).toLocaleString()}</div>
+                            <div>📊 Ganancia total: <span class="positive">${Math.round(item.utilidadNeta * qty).toLocaleString()}</span></div>
+                            <div>💵 Inversión: ${Math.round(item.buy * qty).toLocaleString()}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            updateSimTotal(data);
+        }
+
+        function updateSimTotal(data) {
+            let ganancia = 0, inversion = 0;
+            data.forEach(item => {
+                const qty = simulatorQuantities[item.name] || 0;
+                ganancia += item.utilidadNeta * qty;
+                inversion += item.buy * qty;
+            });
+            document.getElementById('totalGanancia').innerHTML = `${Math.round(ganancia).toLocaleString()} silver`;
+            document.getElementById('totalInversion').innerHTML = `Inversión: ${Math.round(inversion).toLocaleString()} silver | Rentabilidad: ${inversion > 0 ? ((ganancia/inversion)*100).toFixed(2) : 0}%`;
+        }
+
+        function changeQuantity(name, delta) {
+            const current = simulatorQuantities[name] || 0;
+            simulatorQuantities[name] = Math.max(0, current + delta);
+            renderSimulator();
+        }
+
+        function setQuantity(name, value) {
+            let qty = parseInt(value);
+            if (isNaN(qty) || qty < 0) qty = 0;
+            simulatorQuantities[name] = qty;
+            renderSimulator();
+        }
+
+        function resetQuantities() {
+            Object.keys(simulatorQuantities).forEach(k => simulatorQuantities[k] = 0);
+            renderSimulator();
+            showToast('🔄 Cantidades reiniciadas');
+        }
+
+        function applyGlobalQuantity() {
+            const toggle = document.getElementById('globalQtyToggle');
+            if (!toggle.checked) return;
+            const qty = parseInt(document.getElementById('globalQtyValue').value);
+            if (isNaN(qty) || qty < 0) {
+                alert('Ingresa una cantidad válida');
+                return;
+            }
+            Object.keys(simulatorQuantities).forEach(k => simulatorQuantities[k] = qty);
+            renderSimulator();
+            showToast(`🔗 ${qty} aplicado a todos`);
+        }
+
+        function openSimulator() {
+            initQuantities();
+            renderSimulator();
+            document.getElementById('simulatorModal').classList.add('active');
+        }
+
+        function closeSimulator() {
+            document.getElementById('simulatorModal').classList.remove('active');
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+            saveToLocal();
+            showToast(document.body.classList.contains('light') ? '☀️ Modo claro' : '🌙 Modo oscuro');
+        }
+
+        function setupGlobalQtyListeners() {
+            const toggle = document.getElementById('globalQtyToggle');
+            const input = document.getElementById('globalQtyValue');
+            const btn = document.getElementById('applyGlobalQty');
+            toggle.onchange = () => {
+                input.disabled = !toggle.checked;
+                btn.disabled = !toggle.checked;
+            };
+        }
+
+        // Event listeners
+        document.getElementById('taxRate').oninput = () => {
+            renderItems();
+            if (document.getElementById('simulatorModal').classList.contains('active')) renderSimulator();
+        };
+        document.getElementById('lossRate').oninput = () => {
+            renderItems();
+            if (document.getElementById('simulatorModal').classList.contains('active')) renderSimulator();
+        };
+        
+        // Inicializar
         loadFromLocal();
+        setupGlobalQtyListeners();
     </script>
 </body>
 </html>
